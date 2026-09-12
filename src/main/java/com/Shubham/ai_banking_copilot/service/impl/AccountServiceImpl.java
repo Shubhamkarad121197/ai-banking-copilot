@@ -12,6 +12,7 @@ import com.Shubham.ai_banking_copilot.dto.AccountResponseDTO;
 import com.Shubham.ai_banking_copilot.dto.CreateAccountRequest;
 import com.Shubham.ai_banking_copilot.entity.Account;
 import com.Shubham.ai_banking_copilot.entity.User;
+import com.Shubham.ai_banking_copilot.exception.ResourceNotFoundException;
 import com.Shubham.ai_banking_copilot.repository.AccountRepository;
 import com.Shubham.ai_banking_copilot.repository.UserRepository;
 import com.Shubham.ai_banking_copilot.service.AccountService;
@@ -43,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
         User user = userRepository
                 .findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found")
+                        new ResourceNotFoundException("User not found")
                 );
 
         // Create account
@@ -73,7 +74,7 @@ public class AccountServiceImpl implements AccountService {
         User user = userRepository
                 .findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found")
+                        new ResourceNotFoundException("User not found")
                 );
 
         // Get user's accounts
@@ -100,4 +101,25 @@ public class AccountServiceImpl implements AccountService {
                 .substring(0, 12)
                 .toUpperCase();
     }
+
+
+    @Override
+    public AccountResponseDTO getAccountDetails(Long accountId) {
+
+        // Find account by ID
+        Account account = accountRepository
+                .findById(accountId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Account not found")
+                );
+
+        // Convert Account Entity -> AccountResponseDTO
+        return new AccountResponseDTO(
+                account.getId(),
+                account.getAccountNumber(),
+                account.getAccountType().name(),
+                account.getBalance()
+        );
+    }
+
 }

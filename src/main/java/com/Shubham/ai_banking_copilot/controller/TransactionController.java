@@ -6,7 +6,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.Shubham.ai_banking_copilot.dto.TransactionResponseDTO;
+
 import com.Shubham.ai_banking_copilot.dto.DepositRequestDTO;
+import com.Shubham.ai_banking_copilot.dto.TransferRequestDTO;
 import com.Shubham.ai_banking_copilot.dto.WithdrawRequestDTO;
 import com.Shubham.ai_banking_copilot.service.TransactionService;
 
@@ -43,5 +52,27 @@ public class TransactionController {
                 transactionService.withdraw(request);
 
         return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/transfer")
+    public ResponseEntity<String> transfer(
+            @Valid @RequestBody TransferRequestDTO request) {
+
+        return ResponseEntity.ok(
+                transactionService.transfer(request)
+        );
+    }
+    
+    
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<List<TransactionResponseDTO>>
+            getTransactionHistory(
+
+                    @PathVariable Long accountId) {
+
+        return ResponseEntity.ok(
+                transactionService
+                        .getTransactionHistory(accountId)
+        );
     }
 }
