@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Shubham.ai_banking_copilot.dto.AccountResponseDTO;
+import com.Shubham.ai_banking_copilot.dto.ApiResponse;
 import com.Shubham.ai_banking_copilot.dto.CreateAccountRequest;
 import com.Shubham.ai_banking_copilot.service.AccountService;
 
@@ -28,14 +29,14 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createAccount(
+    public ResponseEntity<ApiResponse> createAccount(
             @Valid @RequestBody CreateAccountRequest request) {
 
         String response = accountService.createAccount(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(response);
+                .body(new ApiResponse(response));
     }
 
     @GetMapping
